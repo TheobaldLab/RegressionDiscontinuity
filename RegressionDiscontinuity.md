@@ -21,6 +21,8 @@ library(broom)
 library(broom.mixed)
 library(RCurl)
 library(modelsummary)
+library(rdrobust)
+library(rddensity)
 ```
 
 ## 1. Loading the example datafile
@@ -220,14 +222,55 @@ of **Reachout** on first generation status and their significant levels.
 At the full sample, the estimation is -0.065 and significant at 0.01
 level, whereas at bandwidths of 40 and 30 points, both estimations are
 not significant. Please see Table 1 in the paper for more covariate
-balance checking information.
+balance checking information. In the paper, we also relied on automated
+bandwidth selection results to perform subsequent analyses. The codes
+can be found below,
+
+``` r
+# automated bandwidth selection
+rdbwselect(y = Data_comp$Next, x = Data_comp$Running, c = 71.5, all = TRUE) %>%
+  summary()
+```
+
+    ## Call: rdbwselect
+    ## 
+    ## Number of Obs.                 3062
+    ## BW type                         All
+    ## Kernel                   Triangular
+    ## VCE method                       NN
+    ## 
+    ## Number of Obs.                  388         2674
+    ## Order est. (p)                    1            1
+    ## Order bias  (q)                   2            2
+    ## Unique Obs.                     306         1382
+    ## 
+    ## =======================================================
+    ##                   BW est. (h)    BW bias (b)
+    ##             Left of c Right of c  Left of c Right of c
+    ## =======================================================
+    ##      mserd    11.867     11.867     21.033     21.033
+    ##     msetwo    10.030     13.105     19.407     18.171
+    ##     msesum    10.939     10.939     19.270     19.270
+    ##   msecomb1    10.939     10.939     19.270     19.270
+    ##   msecomb2    10.939     11.867     19.407     19.270
+    ##      cerrd     7.944      7.944     21.033     21.033
+    ##     certwo     6.714      8.773     19.407     18.171
+    ##     cersum     7.323      7.323     19.270     19.270
+    ##   cercomb1     7.323      7.323     19.270     19.270
+    ##   cercomb2     7.323      7.944     19.407     19.270
+    ## =======================================================
+
+We relied on MSE category to find the range of optimal bandwidths. Note:
+the estimated bandwidth shown here might be slightly different than the
+selected BW in the paper.
 
 ## 4.Baseline RD model
 
 In the paper, we demonstrated the baseline RD model in the forms of
 visualization (Figure 4) and model estimation results (Table 2) and
-utlized the baseline model to search for optimal bandwidth (Figure 5).
-The codes below explain each step.
+utilized the baseline model to increase the robustness (Figure 5). The
+codes below explain each step. Additionally, in SI, we provided the
+visualizaiton of the parametric estimation.
 
 First we create the visualization shown in Figure 4.
 
@@ -253,7 +296,7 @@ Data_comp %>%
   )
 ```
 
-![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 Second, following Equation (1) in the paper, we can run the RD model and
 get coefficients in Table 2. The codes below generate the baseline RD
@@ -347,9 +390,20 @@ plot_next <-  ggplot(results, aes(x = Bandwidth, y = Treatment_Effect, color = S
 plot_next
 ```
 
-![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 Please see the paper for full interpretation of Figure 5.
+
+In the SI, we used the codes below to visually examine parametric
+estimation.
+
+``` r
+rdplot(y = Data_comp$Next, x = Data_comp$Running, c = 71.5, x.lim = c(58.5,84.5), y.lim = c(40,80), x.label = "Running", y.label = "Next Exam", title = "")
+```
+
+    ## [1] "Mass points detected in the running variable."
+
+![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ## 5. Fixed-effect model in RD framework
 
@@ -432,7 +486,7 @@ Data_comp %>%
   )
 ```
 
-![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 Second, we can run models with random effects to consider nested
 structure in the example data. In the paper, we consider two different
@@ -734,7 +788,7 @@ plot_next_re <-  ggplot(results, aes(x = Bandwidth, y = Treatment_Effect, color 
 plot_next_re
 ```
 
-![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 Finally, an alternative learning outcome and be used to strengthen the
 robustness of the results. The codes below can generate the baseline RD
