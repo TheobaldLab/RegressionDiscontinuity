@@ -1,2 +1,2 @@
-# RegressionDiscontinuity
-Repo for the RD paper
+# Regression Discontinuity R Markdown 
+Thanks for visiting the repo for the RD paper. Readers can find the R codes and outputs for a step-by-step instruction of a RD design. The file name is **RegressionDiscountinuity.md**. Readers may also find the example data used in the paper. The file name is **RD_WorkingData.csv**. Please note, there might be some minor discrepancies between the example data in this repo and the data used in the paper. 
