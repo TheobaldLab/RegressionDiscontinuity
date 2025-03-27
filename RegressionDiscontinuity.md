@@ -499,10 +499,8 @@ Data_comp %>%
 ![](RegressionDiscontinuity_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 Second, we can run models with random effects to consider nested
-structure in the example data. In the paper, we consider two different
-structures of random effects, the instructor random effect and the
-section-TA random effect. For example, codes below can run the
-multilevel model with instructor ID, Section, and Section-TA combination
+structure in the example data. In the paper, we consider three different specifications of random intercepts. The instructor random effects consider the most basic clustered structure where students were only nested within instructors, the course section random effects consider the basic classroom setting, and the lab section random effects explore a more complex clustered structure where students were nested within the smallest unit of TA reaching out intervention. Codes below can run the
+multilevel model with instructor ID, Course Section ID, and Lab Section ID
 as random intercepts.
 
 ``` r
@@ -572,7 +570,7 @@ summary (model_re2)
     ## c_running -0.271  0.833
 
 ``` r
-# Section - TA combined ID as random intercepts
+# Lab Section ID as random intercepts
 model_re3<- lmer(Next ~ Reachout + c_running + (1 | Section_TA), data = filter(Data_comp, c_running>= -13 & c_running <=13))
 summary (model_re3)
 ```
@@ -738,8 +736,7 @@ modelsummary(list(model_re1, model_re2, model_re3))
 </tbody>
 </table>
 
-Furthermore, with the same model specification, we can create bandwidth
-selection figure (Figure 7 in the paper). Codes are shown below.
+Furthermore, with the same model specification, we can create visualization (Figure 7 in the paper). Codes are shown below (Figure 7a as an example).
 
 ``` r
 # Figure 7a
@@ -831,4 +828,4 @@ summary(baseline_alt)
     ## F-statistic: 316.7 on 2 and 1333 DF,  p-value: < 2.2e-16
 
 The estimated intervention effect at a bandwidth of 26 points is 2.08
-points and is significant at 0.05 level.
+points and is significant at 0.05 level. But note that the estimated effect of the intervention (2.077) is lower than the estimated effect on a more proximal outcome. See the paper for more details.
