@@ -1,6 +1,13 @@
-Regression Discontinuity
+Markdown File for: Toward Causal Inferences in Discipline-Based Education Research (DBER): Using Regression Discontinuity (RD) Design to Understand the Effect of Classroom Interventions
 ================
-SX and EJT
+Shangmou Xu and Elli J. Theobald*
+
+Department of Biology, University of Washington, Seattle, WA 98195
+
+*To whom correspondence should be addressed: ellij@uw.edu
+
+For technical details, please contact: shx23@uw.edu
+
 
 ## Loading packages
 
@@ -222,7 +229,9 @@ of **Reachout** on first generation status and their significant levels.
 At the full sample, the estimation is -0.065 and significant at 0.01
 level, whereas at bandwidths of 40 and 30 points, both estimations are
 not significant. Please see Table 1 in the paper for more covariate
-balance checking information. In the paper, we also relied on automated
+balance checking information. 
+
+In the paper, we also relied on automated
 bandwidth selection results to perform subsequent analyses. The codes
 can be found below,
 
@@ -260,7 +269,8 @@ rdbwselect(y = Data_comp$Next, x = Data_comp$Running, c = 71.5, all = TRUE) %>%
     ##   cercomb2     7.323      7.944     19.407     19.270
     ## =======================================================
 
-We relied on MSE category to find the range of optimal bandwidths. Note:
+We relied on MSE category to find the range of optimal bandwidths in the main text. To understand the total BW, you would sum the Left of c and the Right of c columns. In some estimations, the left c and the right c may be slightly different to address the unequal distribution of the sample below and above the threshold.
+Note:
 the estimated bandwidth shown here might be slightly different than the
 selected BW in the paper.
 
@@ -333,7 +343,7 @@ estimated effect of reaching out is 3.88 points and is significant at
 the 0.05 level.
 
 Finally, using the baseline RD model specification, we can go through
-bandwidths from 2 points to 60 points to search for optimal bandwidth.
+bandwidths from 2 points to 60 points to examine the robustness of the estimate at different BWs.
 The codes below create Figure 5 in the paper.
 
 ``` r
